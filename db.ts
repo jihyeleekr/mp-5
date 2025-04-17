@@ -1,30 +1,27 @@
-import { MongoClient, Db, Collection } from "mongodb";
+import {MongoClient, Db, Collection} from "mongodb";
 
-const MONGO_URI = process.env.MONGO_URI!;
-const DB_NAME = "mp-5";
-export const URLS_COLLECTION = "url-collection";
-
+const MONGO_URI = process.env.MONGO_URI as string;
 if (!MONGO_URI) {
-    throw new Error("MONGO_URI is not defined");
+    throw new Error("MONGO_URI environment variable is undefined");
 }
 
-// Global type declaration to avoid multiple clients in dev
-declare global {
-    var _mongoClientPromise: Promise<MongoClient> | undefined;
+const DB_NAME="url-shortener-db";
+export const URLS_COLLECTION="urls-collection";
+
+let client: MongoClient | null = null;
+let db: Db | null = null;
+
+async function connect(): Promise<Db>{
+    if (!client) {
+        client = new MongoClient(MONGO_URI);
+        await client.connect();
+    }
+    return client.db(DB_NAME);
 }
 
-let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
-
-// ✅ Use global caching for hot reload stability (Next.js friendly)
-if (!global._mongoClientPromise) {
-    client = new MongoClient(MONGO_URI);
-    global._mongoClientPromise = client.connect();
-}
-clientPromise = global._mongoClientPromise;
-
-export async function getCollection(name: string): Promise<Collection> {
-    const client = await clientPromise;
-    const db: Db = client.db(DB_NAME);
-    return db.collection(name);
+export default async function getUrlsCollection(URLS_COLLECTION: string): Promise<Collection>{
+    if (!db) {
+        db = await connect();
+    }
+    return db.collection(URLS_COLLECTION);
 }
