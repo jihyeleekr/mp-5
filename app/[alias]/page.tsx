@@ -1,29 +1,15 @@
-import createShortUrl from '@/lib/createShortUrl';
-import { UrlProps } from '@/types';
+import getAlias from "@/lib/getAlias";
+import {redirect, permanentRedirect} from "next/navigation";
 
-export async function POST(req: Request): Promise<Response> {
-    try {
-        const { url, alias }: UrlProps = await req.json();
+export default async function RedirectPage({params,} : {params: Promise<{alias: string}>}) {
+    const {alias} = await params;
 
-        if (!url || !alias) {
-            return new Response(JSON.stringify({ error: 'Missing URL or alias' }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' },
-            });
-        }
+    console.log("alias:", alias);
 
-        const result = await createShortUrl(url, alias); // this throws if alias exists or db fails
+    const url = await getAlias(alias);
 
-        return new Response(JSON.stringify(result), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-        });
-    } catch (err) {
-        const message =
-            err instanceof Error ? err.message : 'Internal server error';
-        return new Response(JSON.stringify({ error: message }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+    if (url){
+        return permanentRedirect(url);
     }
+    return redirect("/")
 }

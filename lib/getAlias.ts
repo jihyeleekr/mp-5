@@ -1,5 +1,5 @@
 "use server";
-import {getCollection, URLS_COLLECTION } from "@/db";
+import getCollection, {URLS_COLLECTION } from "@/db";
 
 export default async function getAlias(alias: string): Promise<string | null> {
 

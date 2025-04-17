@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Button, TextField, FormHelperText } from '@mui/material';
 import Link from 'next/link';
+import createShortUrl from "@/lib/createShortUrl";
 
 export default function ShortenerForm() {
     const [url, setUrl] = useState('');
@@ -17,44 +18,15 @@ export default function ShortenerForm() {
         setBaseUrl(window.location.origin);
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const submitUrl = async () => {
         setShortenedURL('');
-        setCopied(false);
-        setError('');
-        setLoading(true);
-
-        try {
-            const res = await fetch('/api/shorten', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url, alias }),
-            });
-
-            const contentType = res.headers.get('content-type');
-            let data = null;
-
-            if (contentType && contentType.includes('application/json')) {
-                data = await res.json();
-            } else {
-                const text = await res.text();
-                console.error('Non-JSON response:', text);
-                setError('Server returned invalid response.');
-                return;
-            }
-
-            if (!res.ok || data.error) {
-                setError(data.error || 'Something went wrong.');
-            } else {
-                setShortenedURL(`${baseUrl}/${alias}`);
-            }
-        } catch (err) {
-            console.error(err);
-            setError('Something went wrong.');
-        } finally {
-            setLoading(false);
+        const res = await createShortUrl({url, alias});
+        if (res.length === 0) {
+            setShortenedURL(window.location.href + alias);
+            return;
         }
-    };
+        setError(res);
+    }
 
 
 
@@ -71,7 +43,7 @@ export default function ShortenerForm() {
         <div className="flex flex-col items-center justify-center px-4">
             <form
                 className="text-black p-8 rounded-2xl max-w-xl w-full bg-white shadow-md"
-                onSubmit={handleSubmit}
+                onSubmit={submitUrl}
             >
                 <h2 className="text-2xl font-bold mb-2">Shorten a URL</h2>
                 <p className="text-gray-600 mb-4">
