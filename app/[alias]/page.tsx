@@ -1,14 +1,21 @@
-export const dynamic = 'force-dynamic';
+import {redirect} from "next/navigation";
+import getAlias from "@/app/lib/getAlias";
 
-import { redirect } from 'next/navigation';
-import getAlias from '@/lib/getAlias';
-
-export default async function RedirectPage({ params }: { params: { alias: string } }) {
-    const url = await getAlias(params.alias);
-
-    if (!url) {
-        redirect('/');
+export default async function AliasPage({
+                                            params,
+                                        }: {
+    params: Promise<{ alias: string }>;
+}) {
+    const { alias } = await params;
+    console.log(alias);
+    if (!alias) {
+        return redirect("/");
     }
 
-    redirect(url);
+    const url = await getAlias(alias);
+    if (url === null) {
+        return redirect("/");
+    }
+
+    return redirect(url);
 }
