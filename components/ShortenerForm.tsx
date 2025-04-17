@@ -39,7 +39,7 @@ export default function ShortenerForm() {
                 setShortenedURL(`${baseUrl}/${alias}`);
             }
         } catch (err) {
-            setError('Something went wrong.');
+            setError('Something went wrong.' + err);
         } finally {
             setLoading(false);
         }

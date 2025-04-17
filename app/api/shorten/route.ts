@@ -12,7 +12,6 @@ export async function POST(req: Request): Promise<Response> {
             });
         }
 
-        // optional: validate alias with regex
         if (!/^[a-zA-Z0-9-_]+$/.test(alias)) {
             return new Response(JSON.stringify({ error: 'Invalid alias format' }), {
                 status: 400,
