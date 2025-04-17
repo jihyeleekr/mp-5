@@ -31,13 +31,15 @@ export default function ShortenerForm() {
                 body: JSON.stringify({ url, alias }),
             });
 
-            let data;
-            try {
+            const contentType = res.headers.get('content-type');
+            let data: any = null;
+
+            if (contentType && contentType.includes('application/json')) {
                 data = await res.json();
-            } catch {
+            } else {
                 const text = await res.text();
                 console.error('Non-JSON response:', text);
-                setError('Unexpected server error occurred.');
+                setError('Server returned invalid response.');
                 return;
             }
 
@@ -53,6 +55,7 @@ export default function ShortenerForm() {
             setLoading(false);
         }
     };
+
 
 
     const handleCopy = () => {
