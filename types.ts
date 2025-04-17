@@ -1,4 +1,4 @@
-export type UrlProps = {
+export type AliasProps = {
     url: string;
     alias: string;
 };

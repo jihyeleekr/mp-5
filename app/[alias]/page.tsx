@@ -1,15 +1,21 @@
+import {redirect} from "next/navigation";
 import getAlias from "@/lib/getAlias";
-import {redirect, permanentRedirect} from "next/navigation";
 
-export default async function RedirectPage({params,} : {params: Promise<{alias: string}>}) {
-    const {alias} = await params;
-
-    console.log("alias:", alias);
+export default async function AliasPage({
+                                            params,
+                                        }: {
+    params: Promise<{ alias: string }>;
+}) {
+    const { alias } = await params;
+    console.log(alias);
+    if (!alias) {
+        return redirect("/");
+    }
 
     const url = await getAlias(alias);
-
-    if (url){
-        return permanentRedirect(url);
+    if (url === null) {
+        return redirect("/");
     }
-    return redirect("/")
+
+    return redirect(url);
 }

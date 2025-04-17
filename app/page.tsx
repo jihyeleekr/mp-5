@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import  ShortenerForm  from "@/components/ShortenerForm";
+import  UrlForm  from "@/components/UrlForm";
 
 export default function HomePage() {
     return (
@@ -8,7 +8,7 @@ export default function HomePage() {
             <div className="flex flex-col items-center pt-10 px-4">
                 <h2 className="text-3xl font-semibold mb-6">URL Shortener</h2>
                 <p className="text-gray-700 mb-6">Shorten your long URLs into compact, shareable links</p>
-                <ShortenerForm />
+                <UrlForm />
             </div>
         </main>
     );

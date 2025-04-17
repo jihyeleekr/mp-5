@@ -1,36 +1,29 @@
 "use server";
 
-import getCollection, {URLS_COLLECTION } from '@/db';
-import getAlias from '@/lib/getAlias';
-import { UrlProps } from '@/types';
+import getCollection, { ALIAS_COLLECTION } from "@/db";
+import { AliasProps } from "@/types";
+import getAlias from "./getAlias";
 
 export default async function createShortUrl(
-   props: UrlProps
-): Promise<string> {
-    const {url, alias } = props;
+    url: string,
+    alias: string,
+): Promise<AliasProps> {
+    const p = {
+        url: url,
+        alias: alias,
+    };
 
-    if (!url || !alias) {
-        return "url or alias is missing";
+    const checkAlias = await getAlias(alias);
+    if (checkAlias){
+        throw new Error ("Invalid alias: This alias already exists");
     }
 
-    try{
-        const res = await fetch(url);
-        if (res.status < 200 ||res.status >=500){
-            console.log("invalid url response", res.status);
-            return "invalid url";
-        }
-    } catch {
-        return "invalid url response";
+    const aliasCollection = await getCollection(ALIAS_COLLECTION);
+    const res = await aliasCollection.insertOne({ ...p });
+
+    if (!res.acknowledged) {
+        throw new Error("DB insert failed");
     }
 
-    const aliasCheck = await getAlias(alias);
-    if (aliasCheck) {
-        return "alias already exists";
-    }
-
-    const urlsCollection = await getCollection(URLS_COLLECTION);
-    const res = await urlsCollection.insertOne({alias, url});
-
-    return res.acknowledged ? "" : "something went wrong";
+    return {...p} ;
 }
-
