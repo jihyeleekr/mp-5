@@ -17,12 +17,6 @@ export default function UrlForm() {
 
     return (
         <div className="flex flex-col items-center w-full">
-            <h1 className="flex flex-col font-semibold text-5xl mt-20 mb-3">
-                URL Shortener
-            </h1>
-            <h3 className="flex flex-col text-xl text-black mb-5">
-                Shorten your long URls into compact, shareable links
-            </h3>
             <form
                 className="w-2xl rounded-2xl p-5 bg-white"
                 onSubmit={async (e) => {
