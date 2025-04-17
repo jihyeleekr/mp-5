@@ -31,7 +31,15 @@ export default function ShortenerForm() {
                 body: JSON.stringify({ url, alias }),
             });
 
-            const data = await res.json();
+            let data;
+            try {
+                data = await res.json();
+            } catch {
+                const text = await res.text();
+                console.error('Non-JSON response:', text);
+                setError('Unexpected server error occurred.');
+                return;
+            }
 
             if (!res.ok || data.error) {
                 setError(data.error || 'Something went wrong.');
@@ -39,11 +47,13 @@ export default function ShortenerForm() {
                 setShortenedURL(`${baseUrl}/${alias}`);
             }
         } catch (err) {
-            setError('Something went wrong.' + err);
+            console.error(err);
+            setError('Something went wrong.');
         } finally {
             setLoading(false);
         }
     };
+
 
     const handleCopy = () => {
         if (shortenedURL) {
