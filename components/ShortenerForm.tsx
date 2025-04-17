@@ -1,7 +1,7 @@
 import createShortUrl from '@/lib/createShortUrl';
 import { UrlProps } from '@/types';
 
-export async function POST(req: Request): Promise<Response> {
+export default async function POST(req: Request): Promise<Response> {
     try {
         const { url, alias }: UrlProps = await req.json();
 
