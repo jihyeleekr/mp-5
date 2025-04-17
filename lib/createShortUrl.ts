@@ -5,25 +5,26 @@ import getAlias from '@/lib/getAlias';
 import { UrlProps } from '@/types';
 
 export default async function createShortUrl(
-    url:string,
-    alias:string,
+    url: string,
+    alias: string,
 ): Promise<UrlProps> {
     const props = {
-        url: url,
-        alias: alias,
-    }
+        url,
+        alias,
+    };
 
-    const checkUrl = await getAlias(alias);
-    if (!checkUrl) {
+    const existing = await getAlias(alias);
+    if (existing) {
         throw new Error("This alias already exists");
     }
 
     const aliasCollection = await getCollection(URLS_COLLECTION);
-    const res = await aliasCollection.insertOne({...props});
+    const res = await aliasCollection.insertOne(props);
 
-    if (!res.acknowledged){
-        throw new Error("Data insert Error");
+    if (!res.acknowledged) {
+        throw new Error("Failed to save to database");
     }
 
-    return {...props};
+    return props;
 }
+
