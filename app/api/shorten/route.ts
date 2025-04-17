@@ -1,6 +1,5 @@
 import { getCollection, URLS_COLLECTION } from '@/db';
 import { UrlProps } from '@/types';
-import getAlias from '@/lib/getAlias';
 
 export async function POST(req: Request): Promise<Response> {
     try {
@@ -39,7 +38,7 @@ export async function POST(req: Request): Promise<Response> {
         });
 
     } catch (err: any) {
-        console.error('❌ Internal server error:', err);
+        console.error('Internal server error:', err);
         return new Response(JSON.stringify({ error: 'Internal server error' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },
