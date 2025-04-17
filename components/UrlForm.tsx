@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, FormHelperText, TextField } from "@mui/material";
 import Link from "next/link";
 import createAlias from "@/lib/createShortUrl";
@@ -14,6 +14,11 @@ export default function UrlForm() {
     const [error, setError] = useState("");
     const [shortenedURL, setShortenedURL] = useState("");
     const [copied, setCopied] = useState(false);
+
+    const [baseUrl, setBaseUrl] = useState('');
+    useEffect(() => {
+        setBaseUrl(window.location.origin);
+    }, []);
 
 
     return (
@@ -41,7 +46,7 @@ export default function UrlForm() {
 
                     createAlias(url, alias)
                         .then((res) => {
-                            setShortenedURL(`https://url-shortener-ac.vercel.app/${res.alias}`);
+                            setShortenedURL(`${baseUrl}/${res.alias}`);
                             setError("");
                         })
                         .catch((err) => {
@@ -74,7 +79,7 @@ export default function UrlForm() {
                 </h1>
                 <div className="flex flex-row justify-left items-center w-full">
                     <h2 className="flex flex-row text-xl font-extralight mr-2">
-                        {window.location.origin + '/'}
+                        {baseUrl + '/'}
                     </h2>
                     <TextField
                         variant="outlined"
