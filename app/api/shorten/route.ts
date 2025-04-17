@@ -37,11 +37,12 @@ export async function POST(req: Request): Promise<Response> {
             headers: { 'Content-Type': 'application/json' },
         });
 
-    } catch (err: any) {
-        console.error('Internal server error:', err);
-        return new Response(JSON.stringify({ error: 'Internal server error' }), {
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Internal error';
+        return new Response(JSON.stringify({ error: message }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },
         });
+
     }
 }
