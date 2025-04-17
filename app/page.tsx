@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import ShortenerForm from "@/components/ShortenerForm";
+import  ShortenerForm  from "@/components/ShortenerForm";
 
 export default function HomePage() {
     return (
