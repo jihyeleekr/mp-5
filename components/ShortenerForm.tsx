@@ -32,7 +32,7 @@ export default function ShortenerForm() {
             });
 
             const contentType = res.headers.get('content-type');
-            let data: any = null;
+            let data = null;
 
             if (contentType && contentType.includes('application/json')) {
                 data = await res.json();
