@@ -1,5 +1,5 @@
 "use server";
-import getCollection, {URLS_COLLECTION } from "@/db";
+import getCollection, {ALIAS_COLLECTION} from "@/db";
 
 export default async function getAlias(alias: string): Promise<string | null> {
 
@@ -7,7 +7,7 @@ export default async function getAlias(alias: string): Promise<string | null> {
         return null;
     }
 
-    const collection = await getCollection(URLS_COLLECTION);
+    const collection = await getCollection(ALIAS_COLLECTION);
     const data = await collection.findOne({ alias });
 
     if (!data) {
