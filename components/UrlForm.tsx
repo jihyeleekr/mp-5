@@ -74,7 +74,7 @@ export default function UrlForm() {
                 </h1>
                 <div className="flex flex-row justify-left items-center w-full">
                     <h2 className="flex flex-row text-xl font-extralight mr-2">
-                        https://url-shortener-ac.vercel.app/
+                        {window.location.origin + '/'}
                     </h2>
                     <TextField
                         variant="outlined"

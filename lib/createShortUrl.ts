@@ -12,8 +12,6 @@ export default async function createShortUrl(
         url: url,
         alias: alias,
     };
-    console.log("MONGO_URI:", process.env.MONGO_URI);
-
     const checkAlias = await getAlias(alias);
     if (checkAlias){
         throw new Error ("Invalid alias: This alias already exists");
