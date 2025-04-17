@@ -1,5 +1,5 @@
 import {redirect} from "next/navigation";
-import getAlias from "@/app/lib/getAlias";
+import getAlias from "@/lib/getAlias";
 
 export default async function AliasPage({
                                             params,
